@@ -5,16 +5,19 @@ URL="https://s3.jbecker.dev/data.tar.zst"
 OUTPUT_FILE="data.tar.zst"
 DATA_DIR="data"
 DATA_PATH="${DATA_DIR}/${OUTPUT_FILE}"
+SENTINEL="${DATA_DIR}/.download_complete"
 
 
-# Check if data directory already exists
-if [ -d "$DATA_DIR" ]; then
-    echo "Data directory already exists, skipping download."
+# Skip if a previous run completed successfully
+if [ -f "$SENTINEL" ]; then
+    echo "Data already downloaded and extracted, skipping."
     exit 0
 fi
 
 # Download file using best available tool
 download() {
+    mkdir -p "$DATA_DIR"
+
     if command -v aria2c &> /dev/null; then
         echo "Downloading with aria2c..."
         aria2c -x 16 -s 16 -d "$DATA_DIR" -o "$OUTPUT_FILE" "$URL"
@@ -56,4 +59,5 @@ download
 extract
 cleanup
 
+touch "$SENTINEL"
 echo "Data directory ready."
