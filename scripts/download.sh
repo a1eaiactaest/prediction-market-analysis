@@ -45,9 +45,9 @@ extract() {
 
 # Cleanup downloaded archive
 cleanup() {
-    if [ -f "$OUTPUT_FILE" ]; then
+    if [ -f "$DATA_PATH" ]; then
         echo "Cleaning up..."
-        rm "$OUTPUT_FILE"
+        rm "$DATA_PATH"
     fi
 }
 
